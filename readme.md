@@ -59,11 +59,11 @@ Fine-tune every aspect of your prompt with detailed control panels for each musi
 
 ### Online Usage
 
-Visit the [GitHub Pages site](https://yourusername.github.io/music_prompt_generator) to use MPG directly in your browser without installation.
+Visit the [GitHub Pages site](https://jamesnavinhill.github.io/music_prompt_generator) to use MPG directly in your browser without installation.
 
 ### Local Usage
 
-1. Clone this repository: `git clone https://github.com/yourusername/music_prompt_generator.git`
+1. Clone this repository: `git clone https://github.com/jamesnavinhill/music_prompt_generator.git`
 2. Open `index.html` in any modern web browser
 3. Start generating music prompts!
 
