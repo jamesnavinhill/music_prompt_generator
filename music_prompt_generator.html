@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Prompt Matrix - Professional Edition</title>
+    <title>Music Prompt Generator</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,7 @@
             background: rgba(26, 34, 50, 0.95);
             backdrop-filter: blur(10px);
             padding: 30px;
-            border-radius: 16px;
+            border-radius: 2px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
             overflow-x: auto;
@@ -43,12 +43,45 @@
             background-clip: text;
         }
         
-        .control-panel {
+        .advanced-controls {
             background: rgba(255, 255, 255, 0.03);
-            padding: 20px;
-            border-radius: 12px;
+            border-radius: 2px;
             margin-bottom: 25px;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .advanced-controls-header {
+            padding: 12px 20px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .advanced-controls-header h3 {
+            font-size: 16px;
+            color: #a0aec0;
+            margin: 0;
+        }
+
+        .advanced-controls-content {
+            padding: 20px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .advanced-controls-content.collapsed {
+            display: none;
+        }
+
+        .control-panel {
+            padding: 0;
+            border: none;
+            background: none;
+            margin: 0;
         }
         
         .style-selector {
@@ -67,7 +100,7 @@
         
         .style-selector select {
             padding: 10px 15px;
-            border-radius: 8px;
+            border-radius: 2px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             background-color: rgba(0, 0, 0, 0.3);
             color: #ffffff;
@@ -80,18 +113,22 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            margin-bottom: 20px; /* Added margin */
         }
         
-        .btn-primary {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
+        .btn-primary, .btn-secondary, .btn-accent, .btn-danger, .copy-btn, .tab-button {
+            padding: 10px 20px;
+            border-radius: 2px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
             transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            border: none;
             box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
         }
         
@@ -102,15 +139,9 @@
         }
         
         .btn-secondary {
-            padding: 12px 24px;
             background: rgba(255, 255, 255, 0.08);
             color: #e2e8f0;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
         
         .btn-secondary:hover {
@@ -120,15 +151,9 @@
         }
         
         .btn-accent {
-            padding: 12px 24px;
             background: linear-gradient(135deg, #805a3b 0%, #6b4730 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(128, 90, 59, 0.3);
         }
         
@@ -139,15 +164,9 @@
         }
         
         .btn-danger {
-            padding: 12px 24px;
             background: rgba(220, 53, 69, 0.2);
             color: #ff6b6b;
             border: 1px solid rgba(220, 53, 69, 0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
         
         .btn-danger:hover {
@@ -161,7 +180,7 @@
             border-collapse: separate;
             border-spacing: 0;
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            border-radius: 2px;
             overflow: hidden;
         }
         
@@ -272,7 +291,7 @@
             width: 100%;
             padding: 6px;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 4px;
+            border-radius: 2px;
             background-color: rgba(0, 0, 0, 0.4);
             color: #ffffff;
             font-size: 11px;
@@ -300,7 +319,7 @@
             background: linear-gradient(135deg, rgba(74, 85, 104, 0.15) 0%, rgba(74, 85, 104, 0.08) 100%);
             border: 2px solid #4a5568;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 2px;
             margin-bottom: 20px;
             position: relative;
             box-shadow: 0 4px 15px rgba(74, 85, 104, 0.15);
@@ -321,7 +340,7 @@
             word-wrap: break-word;
             background: rgba(0, 0, 0, 0.25);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 2px;
             border: 1px solid rgba(74, 85, 104, 0.3);
         }
         
@@ -329,15 +348,9 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 8px 16px;
             background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             color: white;
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
         }
         
         .copy-btn:hover {
@@ -353,7 +366,7 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 2px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         
@@ -372,7 +385,7 @@
             white-space: pre-wrap;
             background: rgba(0, 0, 0, 0.2);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 2px;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
@@ -390,12 +403,12 @@
         
         ::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+            border-radius: 2px;
         }
         
         ::-webkit-scrollbar-thumb {
             background: rgba(113, 128, 150, 0.4);
-            border-radius: 5px;
+            border-radius: 2px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
@@ -420,7 +433,7 @@
             background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             color: white;
             padding: 2px 8px;
-            border-radius: 12px;
+            border-radius: 2px;
             font-size: 11px;
             margin-left: 8px;
             font-weight: 600;
@@ -445,7 +458,7 @@
             background: rgba(255, 255, 255, 0.08);
             color: #a0aec0;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
+            border-radius: 2px;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
@@ -505,11 +518,12 @@
         .tab-navigation {
             display: flex;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Attached to table */
             padding: 12px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
+            border-radius: 2px 2px 0 0; /* Sharpened top corners */
             border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none; /* Remove bottom border */
             overflow-x: auto;
             overflow-y: hidden;
             scroll-behavior: smooth;
@@ -517,15 +531,9 @@
         }
         
         .tab-button {
-            padding: 10px 20px;
             background: rgba(255, 255, 255, 0.05);
             color: #a0aec0;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
             white-space: nowrap;
             min-width: fit-content;
             position: relative;
@@ -636,83 +644,141 @@
         tbody tr.fade-in {
             animation: fadeIn 0.3s ease forwards;
         }
+
+        .fusion-toggles {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .fusion-toggles label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .fusion-toggles label:hover {
+            background: rgba(0,0,0,0.4);
+        }
+
+        .fusion-toggles input {
+            width: 16px;
+            height: 16px;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Music Prompt Matrix Generator</h1>
+        <h1>Music Prompt Generator</h1>
         
-        <div class="control-panel">
-            <div class="style-selector">
-                <label for="styleSelect">Select Style:</label>
-                <select id="styleSelect">
-                    <option value="">Choose a style...</option>
-                    <option value="random">🎲 Random</option>
-                    <option value="chillhop">Chillhop</option>
-                    <option value="lofi">Lo-Fi</option>
-                    <option value="neo-soul">Neo-Soul</option>
-                    <option value="rnb">R&B</option>
-                    <option value="hiphop">Hip-Hop</option>
-                    <option value="gospel">Gospel</option>
-                    <option value="edm">EDM</option>
-                </select>
-                <button class="btn-accent" onclick="generateStylePreset()">🎨 Generate Style</button>
+        <div class="advanced-controls">
+            <div class="advanced-controls-header" onclick="toggleAdvancedControls()">
+                <h3>Advanced Controls & Fusion</h3>
+                <span class="toggle-icon"></span>
             </div>
-            
-            <div class="button-group">
-                <button class="btn-primary" onclick="generatePrompt()">🎵 Generate Prompt</button>
-                <button class="btn-secondary" onclick="exportToCSV()">📊 Export to CSV</button>
-                <button class="btn-secondary" onclick="toggleAllSections()">⤵️ Expand/Collapse All</button>
-                <button class="btn-danger" onclick="clearAll()">🗑️ Clear All</button>
-            </div>
-            
-            <!-- Preset Management Section -->
-            <div class="preset-section" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                    <label style="font-weight: 600; color: #a0aec0; font-size: 14px;">Presets:</label>
-                    
-                    <select id="presetDropdown" style="padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(0, 0, 0, 0.3); color: #ffffff; font-size: 14px; min-width: 200px; cursor: pointer;">
-                        <option value="">Select a preset...</option>
-                        <optgroup label="⭐ Favorites" id="favoritesGroup"></optgroup>
-                        <optgroup label="📝 User Presets" id="userPresetsGroup"></optgroup>
-                        <optgroup label="🕐 Recent History" id="historyGroup"></optgroup>
-                    </select>
-                    
-                    <button class="btn-primary" onclick="showSavePresetModal()">💾 Save Preset</button>
-                    <button class="btn-secondary" onclick="loadSelectedPreset()">📂 Load</button>
-                    <button class="btn-secondary" onclick="deleteSelectedPreset()">🗑️ Delete</button>
-                    <button class="btn-secondary" onclick="exportPresets()">📤 Export</button>
-                    <button class="btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import</button>
-                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importPresets(event)">
+            <div class="advanced-controls-content collapsed">
+                <div class="control-panel">
+                    <h4>Style Preset Generator</h4>
+                    <div class="style-selector">
+                        <label for="styleSelect">Select Style:</label>
+                        <select id="styleSelect">
+                            <option value="">Choose a style...</option>
+                            <option value="random">Random</option>
+                            <option value="chillhop">Chillhop</option>
+                            <option value="lofi">Lo-Fi</option>
+                            <option value="neo-soul">Neo-Soul</option>
+                            <option value="rnb">R&B</option>
+                            <option value="hiphop">Hip-Hop</option>
+                            <option value="gospel">Gospel</option>
+                            <option value="edm">EDM</option>
+                        </select>
+                        <button class="btn-accent" onclick="generateStylePreset()">Generate from Style</button>
+                    </div>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+                    <h4>Preset Management</h4>
+                    <!-- Preset Management Section -->
+                    <div class="preset-section">
+                        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <label style="font-weight: 600; color: #a0aec0; font-size: 14px;">Presets:</label>
+                            
+                            <select id="presetDropdown" style="padding: 10px 15px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(0, 0, 0, 0.3); color: #ffffff; font-size: 14px; min-width: 200px; cursor: pointer;">
+                                <option value="">Select a preset...</option>
+                                <optgroup label="Favorites" id="favoritesGroup"></optgroup>
+                                <optgroup label="User Presets" id="userPresetsGroup"></optgroup>
+                                <optgroup label="Recent History" id="historyGroup"></optgroup>
+                            </select>
+                            
+                            <button class="btn-primary" onclick="showSavePresetModal()">Save Preset</button>
+                            <button class="btn-secondary" onclick="loadSelectedPreset()">Load</button>
+                            <button class="btn-secondary" onclick="deleteSelectedPreset()">Delete</button>
+                            <button class="btn-secondary" onclick="exportPresets()">Export</button>
+                            <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import</button>
+                            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importPresets(event)">
+                        </div>
+                        
+                        <div id="presetInfo" style="margin-top: 10px; font-size: 12px; color: #718096; display: none;">
+                            <span id="presetMetadata"></span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div id="presetInfo" style="margin-top: 10px; font-size: 12px; color: #718096; display: none;">
-                    <span id="presetMetadata"></span>
+                <div class="control-panel">
+                    <h4>Style Fusion Generator</h4>
+                    <p style="font-size: 12px; color: #a0aec0; margin-bottom: 15px;">Select 2 or 3 styles to fuse together.</p>
+                    <div id="fusionStyleToggles" class="fusion-toggles">
+                        <!-- Fusion toggles will be populated here -->
+                    </div>
+                    <button id="generateFusionBtn" class="btn-accent" onclick="generateFusion()" style="margin-top: 15px;" disabled>Generate Fusion</button>
                 </div>
             </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="generatePrompt()">Generate Prompt</button>
+            <button class="btn-secondary" onclick="exportToCSV()">Export to CSV</button>
+            <button class="btn-secondary" onclick="toggleAllSections()">Expand/Collapse All</button>
+            <button class="btn-danger" onclick="clearAll()">Clear All</button>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="all" onclick="toggleStyle('all', this)">All Styles</button>
+            <button class="tab-button" data-tab="chillhop" onclick="toggleStyle('chillhop', this)">Chillhop</button>
+            <button class="tab-button" data-tab="lofi" onclick="toggleStyle('lofi', this)">Lo-Fi</button>
+            <button class="tab-button" data-tab="neo-soul" onclick="toggleStyle('neo-soul', this)">Neo-Soul</button>
+            <button class="tab-button" data-tab="rnb" onclick="toggleStyle('rnb', this)">R&B</button>
+            <button class="tab-button" data-tab="hiphop" onclick="toggleStyle('hiphop', this)">Hip-Hop</button>
+            <button class="tab-button" data-tab="gospel" onclick="toggleStyle('gospel', this)">Gospel</button>
+            <button class="tab-button" data-tab="edm" onclick="toggleStyle('edm', this)">EDM</button>
+            <button class="tab-button" data-tab="trap" onclick="toggleStyle('trap', this)">Trap</button>
         </div>
         
         <!-- Save Preset Modal -->
         <div id="savePresetModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;">
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);" onclick="closeSavePresetModal()"></div>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 400px; max-width: 90vw;">
-                <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 1.5rem;">💾 Save Preset</h3>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 2px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); min-width: 400px; max-width: 90vw;">
+                <h3 style="color: #ffffff; margin-bottom: 20px; font-size: 1.5rem;">Save Preset</h3>
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; color: #a0aec0; font-size: 14px; margin-bottom: 8px;">Preset Name:</label>
-                    <input type="text" id="presetName" placeholder="Enter preset name..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.3); color: #ffffff; font-size: 14px;" onkeypress="if(event.key === 'Enter') savePreset()">
+                    <input type="text" id="presetName" placeholder="Enter preset name..." style="width: 100%; padding: 10px; border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.3); color: #ffffff; font-size: 14px;" onkeypress="if(event.key === 'Enter') savePreset()">
                 </div>
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: flex; align-items: center; color: #a0aec0; font-size: 14px; cursor: pointer;">
                         <input type="checkbox" id="presetFavorite" style="margin-right: 8px;">
-                        <span>⭐ Add to Favorites</span>
+                        <span>Add to Favorites</span>
                     </label>
                 </div>
                 
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button class="btn-secondary" onclick="closeSavePresetModal()">Cancel</button>
-                    <button class="btn-primary" onclick="savePreset()">Save Preset</button>
+                    <button class="btn-primary" onclick="savePreset()">Save</button>
                 </div>
             </div>
         </div>
@@ -720,61 +786,48 @@
         <!-- Toast Notification Container -->
         <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 2000;"></div>
         
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button class="tab-button active" data-tab="all" onclick="switchToTab('all')">All Styles</button>
-            <button class="tab-button" data-tab="chillhop" onclick="switchToTab('chillhop')">Chillhop</button>
-            <button class="tab-button" data-tab="lofi" onclick="switchToTab('lofi')">Lo-Fi</button>
-            <button class="tab-button" data-tab="neo-soul" onclick="switchToTab('neo-soul')">Neo-Soul</button>
-            <button class="tab-button" data-tab="rnb" onclick="switchToTab('rnb')">R&B</button>
-            <button class="tab-button" data-tab="hiphop" onclick="switchToTab('hiphop')">Hip-Hop</button>
-            <button class="tab-button" data-tab="gospel" onclick="switchToTab('gospel')">Gospel</button>
-            <button class="tab-button" data-tab="edm" onclick="switchToTab('edm')">EDM</button>
-            <button class="tab-button" data-tab="trap" onclick="switchToTab('trap')">Trap</button>
-        </div>
-        
         <table id="promptMatrix">
             <thead>
                 <tr>
                     <th class="style-cell">Style</th>
                     <!-- Core Foundation -->
                     <th class="section-header core collapsed" colspan="4" onclick="toggleSection('core')" data-section="core">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">CORE FOUNDATION</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('core')">Focus</button>
                     </th>
                     <!-- Rhythm Section -->
                     <th class="section-header rhythm collapsed" colspan="5" onclick="toggleSection('rhythm')" data-section="rhythm">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">RHYTHM SECTION</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('rhythm')">Focus</button>
                     </th>
                     <!-- Bass Foundation -->
                     <th class="section-header bass collapsed" colspan="3" onclick="toggleSection('bass')" data-section="bass">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">BASS FOUNDATION</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('bass')">Focus</button>
                     </th>
                     <!-- Melodic Elements -->
                     <th class="section-header melodic collapsed" colspan="4" onclick="toggleSection('melodic')" data-section="melodic">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">MELODIC ELEMENTS</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('melodic')">Focus</button>
                     </th>
                     <!-- Texture & Atmosphere -->
                     <th class="section-header texture collapsed" colspan="4" onclick="toggleSection('texture')" data-section="texture">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">TEXTURE & ATMOSPHERE</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('texture')">Focus</button>
                     </th>
                     <!-- Production & Character -->
                     <th class="section-header production collapsed" colspan="4" onclick="toggleSection('production')" data-section="production">
-                        <span class="toggle-icon">➕</span>
+                        <span class="toggle-icon"></span>
                         <span class="section-text">PRODUCTION & CHARACTER</span>
                         <span class="selection-badge" style="display: none;">0</span>
                         <button class="focus-btn" onclick="event.stopPropagation(); focusOnSection('production')">Focus</button>
@@ -829,7 +882,7 @@
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="shakers">Shakers</option><option value="finger-snaps">Finger Snaps</option><option value="vinyl-crackle">Vinyl Crackle</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="warm-synth">Warm Synth</option><option value="upright-bass">Upright Bass</option><option value="electric-bass">Electric Bass</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="walking-bass">Walking Bass</option><option value="simple-root">Simple Root</option><option value="melodic-runs">Melodic Runs</option></select></td>
-                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="smooth-rounded">Smooth & Rounded</option><option value="warm-analog">Warm Analog</option><option value="deep-woody">Deep & Woody</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="smooth-rounded">Smooth &amp; Rounded</option><option value="warm-analog">Warm Analog</option><option value="deep-woody">Deep &amp; Woody</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="electric-piano">Electric Piano</option><option value="mellow-synth">Mellow Synth</option><option value="jazz-guitar">Jazz Guitar</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="ii-V-I">ii-V-I</option><option value="vi-IV-I-V">vi-IV-I-V</option><option value="modal-jazz">Modal Jazz</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="smooth-voice">Smooth Voice Leading</option><option value="chromatic">Chromatic Movement</option><option value="suspended">Suspended Chords</option></select></td>
@@ -838,9 +891,9 @@
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="jazz-vocals">Jazz Vocal Samples</option><option value="spoken-word">Spoken Word</option><option value="no-vocals">No Vocals</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="rain-sounds">Rain Sounds</option><option value="cafe-ambience">Cafe Ambience</option><option value="vinyl-pops">Vinyl Pops</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="warm-reverb">Warm Reverb</option><option value="stereo-wide">Stereo Wide</option><option value="intimate-close">Intimate Close</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="clean-warm">Clean & Warm</option><option value="lo-fi-dusty">Lo-Fi Dusty</option><option value="vintage-analog">Vintage Analog</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="clean-warm">Clean &amp; Warm</option><option value="lo-fi-dusty">Lo-Fi Dusty</option><option value="vintage-analog">Vintage Analog</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="tape-saturation">Tape Saturation</option><option value="subtle-compression">Subtle Compression</option><option value="analog-warmth">Analog Warmth</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="relaxed-chill">Relaxed & Chill</option><option value="contemplative">Contemplative</option><option value="nostalgic">Nostalgic</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="relaxed-chill">Relaxed &amp; Chill</option><option value="contemplative">Contemplative</option><option value="nostalgic">Nostalgic</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-jazz">90s Jazz</option><option value="modern-chill">Modern Chill</option><option value="vintage-soul">Vintage Soul</option></select></td>
                 </tr>
                 
@@ -858,7 +911,7 @@
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="record-crackle">Record Crackle</option><option value="dusty-shakers">Dusty Shakers</option><option value="tape-hiss">Tape Hiss</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="warm-808">Warm 808</option><option value="muffled-synth">Muffled Synth Bass</option><option value="analog-sub">Analog Sub</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="simple-boom-bap">Simple Boom-Bap</option><option value="lazy-groove">Lazy Groove</option><option value="off-beat-bass">Off-Beat Bass</option></select></td>
-                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="saturated-warm">Saturated & Warm</option><option value="muffled-deep">Muffled & Deep</option><option value="analog-fuzzy">Analog Fuzzy</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="saturated-warm">Saturated &amp; Warm</option><option value="muffled-deep">Muffled &amp; Deep</option><option value="analog-fuzzy">Analog Fuzzy</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="dusty-piano">Dusty Piano</option><option value="warm-rhodes">Warm Rhodes</option><option value="vintage-synth">Vintage Synth</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="simple-triads">Simple Triads</option><option value="jazz-extensions">Jazz Extensions</option><option value="modal-minor">Modal Minor</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="lazy-voice-leading">Lazy Voice Leading</option><option value="vintage-modulation">Vintage Modulation</option><option value="tape-flutter">Tape Flutter</option></select></td>
@@ -869,7 +922,7 @@
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="analog-saturation">Analog Saturation</option><option value="muffled-space">Muffled Space</option><option value="vintage-mono">Vintage Mono</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="dusty-vintage">Dusty Vintage</option><option value="analog-compressed">Analog Compressed</option><option value="tape-warped">Tape Warped</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="analog-distortion">Analog Distortion</option><option value="tape-compression">Tape Compression</option><option value="vintage-eq">Vintage EQ</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="dreamy-nostalgic">Dreamy & Nostalgic</option><option value="melancholic">Melancholic</option><option value="cozy-intimate">Cozy & Intimate</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="dreamy-nostalgic">Dreamy &amp; Nostalgic</option><option value="melancholic">Melancholic</option><option value="cozy-intimate">Cozy &amp; Intimate</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-hiphop">90s Hip-Hop</option><option value="vintage-bedroom">Vintage Bedroom</option><option value="dusty-vinyl">Dusty Vinyl Era</option></select></td>
                 </tr>
                 
@@ -884,10 +937,10 @@
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="neo-soul-groove">Neo-Soul Groove</option><option value="syncopated-kick">Syncopated Kick</option><option value="ghost-kick">Ghost Kick</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="fat-snare">Fat Snare</option><option value="rim-click">Rim Click</option><option value="layered-clap">Layered Clap</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="complex-hats">Complex Hi-Hats</option><option value="neo-shuffle">Neo Shuffle</option><option value="crisp-16ths">Crisp 16ths</option></select></td>
-                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="live-percussion">Live Percussion</option><option value="congas-bongos">Congas & Bongos</option><option value="tambourine-accents">Tambourine Accents</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="live-percussion">Live Percussion</option><option value="congas-bongos">Congas &amp; Bongos</option><option value="tambourine-accents">Tambourine Accents</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="fender-bass">Fender Bass</option><option value="synth-bass">Synth Bass</option><option value="upright-bass">Upright Bass</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="syncopated-groove">Syncopated Groove</option><option value="melodic-bass">Melodic Bass</option><option value="pocket-playing">Pocket Playing</option></select></td>
-                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="punchy-round">Punchy & Round</option><option value="warm-tube">Warm Tube</option><option value="vintage-moog">Vintage Moog</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="punchy-round">Punchy &amp; Round</option><option value="warm-tube">Warm Tube</option><option value="vintage-moog">Vintage Moog</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="fender-rhodes">Fender Rhodes</option><option value="wurlitzer">Wurlitzer</option><option value="neo-soul-guitar">Neo-Soul Guitar</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="complex-jazz">Complex Jazz</option><option value="extended-chords">Extended Chords</option><option value="altered-dominants">Altered Dominants</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="sophisticated">Sophisticated Movement</option><option value="chromatic-bass">Chromatic Bass Movement</option><option value="modal-interchange">Modal Interchange</option></select></td>
@@ -898,7 +951,7 @@
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="studio-space">Studio Space</option><option value="analog-reverb">Analog Reverb</option><option value="wide-stereo">Wide Stereo</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="warm-analog">Warm Analog</option><option value="live-studio">Live Studio</option><option value="vintage-console">Vintage Console</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="analog-compression">Analog Compression</option><option value="tube-saturation">Tube Saturation</option><option value="tape-delay">Tape Delay</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="soulful-smooth">Soulful & Smooth</option><option value="sophisticated">Sophisticated</option><option value="emotional-deep">Emotional & Deep</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="soulful-smooth">Soulful &amp; Smooth</option><option value="sophisticated">Sophisticated</option><option value="emotional-deep">Emotional &amp; Deep</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-soul">90s Soul</option><option value="2000s-neo">2000s Neo</option><option value="classic-motown">Classic Motown</option></select></td>
                 </tr>
                 
@@ -909,14 +962,14 @@
                     <td class="data-cell core hidden"><select><option value="">Select...</option><option value="90-100">90-100 BPM</option><option value="100-110">100-110 BPM</option><option value="110-120">110-120 BPM</option></select></td>
                     <td class="data-cell core hidden"><select><option value="">Select...</option><option value="Bb-major">Bb Major</option><option value="G-minor">G Minor</option><option value="Eb-major">Eb Major</option></select></td>
                     <td class="data-cell core hidden"><select><option value="">Select...</option><option value="4/4">4/4</option><option value="rnb-swing">R&B Swing</option><option value="half-time-shuffle">Half-Time Shuffle</option></select></td>
-                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="tight-punchy">Tight & Punchy</option><option value="808-hybrid">808 Hybrid</option><option value="live-drums">Live Drums</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="tight-punchy">Tight &amp; Punchy</option><option value="808-hybrid">808 Hybrid</option><option value="live-drums">Live Drums</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="punchy-808">Punchy 808</option><option value="sub-heavy">Sub Heavy</option><option value="syncopated-pattern">Syncopated Pattern</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="crisp-clap">Crisp Clap</option><option value="layered-snare">Layered Snare</option><option value="tight-snap">Tight Snap</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="modern-hats">Modern Hi-Hats</option><option value="trap-influenced">Trap Influenced</option><option value="classic-rnb">Classic R&B</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="percussion-fills">Percussion Fills</option><option value="shakers">Shakers</option><option value="finger-snaps">Finger Snaps</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="sub-bass">Sub Bass</option><option value="analog-synth">Analog Synth</option><option value="electric-bass">Electric Bass</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="modern-groove">Modern Groove</option><option value="syncopated-funk">Syncopated Funk</option><option value="smooth-pocket">Smooth Pocket</option></select></td>
-                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="deep-punchy">Deep & Punchy</option><option value="warm-tube">Warm Tube</option><option value="modern-clean">Modern Clean</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="deep-punchy">Deep &amp; Punchy</option><option value="warm-tube">Warm Tube</option><option value="modern-clean">Modern Clean</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="modern-keys">Modern Keys</option><option value="vintage-rhodes">Vintage Rhodes</option><option value="smooth-guitar">Smooth Guitar</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="contemporary">Contemporary</option><option value="gospel-influenced">Gospel Influenced</option><option value="jazzy-extensions">Jazzy Extensions</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="smooth-transitions">Smooth Transitions</option><option value="modern-voicing">Modern Voicing</option><option value="soulful-movement">Soulful Movement</option></select></td>
@@ -927,7 +980,7 @@
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="polished-space">Polished Space</option><option value="modern-reverb">Modern Reverb</option><option value="intimate-vocals">Intimate Vocals</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="modern-polish">Modern Polish</option><option value="vintage-warmth">Vintage Warmth</option><option value="contemporary-mix">Contemporary Mix</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="modern-compression">Modern Compression</option><option value="vocal-processing">Vocal Processing</option><option value="subtle-autotune">Subtle Auto-tune</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="smooth-sensual">Smooth & Sensual</option><option value="emotional-powerful">Emotional & Powerful</option><option value="contemporary-cool">Contemporary Cool</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="smooth-sensual">Smooth &amp; Sensual</option><option value="emotional-powerful">Emotional &amp; Powerful</option><option value="contemporary-cool">Contemporary Cool</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-rnb">90s R&B</option><option value="2000s-smooth">2000s Smooth</option><option value="modern-rnb">Modern R&B</option></select></td>
                 </tr>
                 
@@ -954,10 +1007,10 @@
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="rap-vocals">Rap Vocals</option><option value="vocal-samples">Vocal Samples</option><option value="ad-libs">Ad-libs</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="vinyl-crackle">Vinyl Crackle</option><option value="urban-ambience">Urban Ambience</option><option value="tape-stops">Tape Stops</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="wide-stereo">Wide Stereo</option><option value="punchy-mono">Punchy Mono</option><option value="spatial-effects">Spatial Effects</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="hard-punchy">Hard & Punchy</option><option value="lo-fi-dusty">Lo-Fi Dusty</option><option value="modern-clean">Modern Clean</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="hard-punchy">Hard &amp; Punchy</option><option value="lo-fi-dusty">Lo-Fi Dusty</option><option value="modern-clean">Modern Clean</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="heavy-compression">Heavy Compression</option><option value="distortion">Distortion</option><option value="vinyl-simulation">Vinyl Simulation</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="aggressive-hard">Aggressive & Hard</option><option value="dark-moody">Dark & Moody</option><option value="confident-swagger">Confident Swagger</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-golden-age">90s Golden Age</option><option value="trap-modern">Trap Modern</option><option value="old-school">Old School</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="aggressive-hard">Aggressive &amp; Hard</option><option value="dark-moody">Dark &amp; Moody</option><option value="melancholic-and-wavy">Melancholic and Wavy</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="2010s-trap">2010s Trap</option><option value="modern-soundcloud">Modern Soundcloud</option><option value="future-trap">Future Trap</option></select></td>
                 </tr>
                 
                 <!-- GOSPEL ROW -->
@@ -974,18 +1027,18 @@
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="live-percussion">Live Percussion</option><option value="tambourine">Tambourine</option><option value="hand-claps">Hand Claps</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="electric-bass">Electric Bass</option><option value="synth-bass">Synth Bass</option><option value="upright-bass">Upright Bass</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="gospel-walking">Gospel Walking</option><option value="root-fifth">Root-Fifth</option><option value="melodic-gospel">Melodic Gospel</option></select></td>
-                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="warm-punchy">Warm & Punchy</option><option value="vintage-tube">Vintage Tube</option><option value="modern-tight">Modern Tight</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="warm-punchy">Warm &amp; Punchy</option><option value="vintage-tube">Vintage Tube</option><option value="modern-tight">Modern Tight</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="hammond-organ">Hammond Organ</option><option value="gospel-piano">Gospel Piano</option><option value="electric-piano">Electric Piano</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="gospel-progressions">Gospel Progressions</option><option value="church-chords">Church Chords</option><option value="extended-harmony">Extended Harmony</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="gospel-runs">Gospel Runs</option><option value="passing-chords">Passing Chords</option><option value="chromatic-gospel">Chromatic Gospel</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="gospel-organ">Gospel Organ</option><option value="brass-section">Brass Section</option><option value="string-section">String Section</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="church-atmosphere">Church Atmosphere</option><option value="warm-reverb">Warm Reverb</option><option value="inspirational-pads">Inspirational Pads</option></select></td>
-                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="gospel-choir">Gospel Choir</option><option value="lead-vocals">Lead Vocals</option><option value="call-response">Call & Response</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="gospel-choir">Gospel Choir</option><option value="lead-vocals">Lead Vocals</option><option value="call-response">Call &amp; Response</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="church-reverb">Church Reverb</option><option value="congregation">Congregation</option><option value="organ-leslie">Organ Leslie</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="church-space">Church Space</option><option value="cathedral-reverb">Cathedral Reverb</option><option value="intimate-worship">Intimate Worship</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="live-church">Live Church</option><option value="vintage-gospel">Vintage Gospel</option><option value="modern-worship">Modern Worship</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="analog-warmth">Analog Warmth</option><option value="tube-compression">Tube Compression</option><option value="vintage-reverb">Vintage Reverb</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="uplifting-joyful">Uplifting & Joyful</option><option value="spiritual-moving">Spiritual & Moving</option><option value="celebratory">Celebratory</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="uplifting-joyful">Uplifting &amp; Joyful</option><option value="spiritual-moving">Spiritual &amp; Moving</option><option value="celebratory">Celebratory</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="classic-gospel">Classic Gospel</option><option value="90s-contemporary">90s Contemporary</option><option value="modern-worship">Modern Worship</option></select></td>
                 </tr>
                 
@@ -998,7 +1051,7 @@
                     <td class="data-cell core hidden"><select><option value="">Select...</option><option value="4/4">4/4</option><option value="straight-4/4">Straight 4/4</option><option value="dance-timing">Dance Timing</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="electronic-punchy">Electronic Punchy</option><option value="layered-samples">Layered Samples</option><option value="analog-drums">Analog Drums</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="four-on-floor">Four on Floor</option><option value="deep-house-kick">Deep House Kick</option><option value="punchy-dance">Punchy Dance</option></select></td>
-                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="clap-snare">Clap & Snare</option><option value="layered-percussion">Layered Percussion</option><option value="analog-snare">Analog Snare</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="clap-snare">Clap &amp; Snare</option><option value="layered-percussion">Layered Percussion</option><option value="analog-snare">Analog Snare</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="closed-open">Closed/Open Pattern</option><option value="driving-16ths">Driving 16ths</option><option value="filtered-hats">Filtered Hi-Hats</option></select></td>
                     <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="percussion-loops">Percussion Loops</option><option value="ethnic-percussion">Ethnic Percussion</option><option value="electronic-hits">Electronic Hits</option></select></td>
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="deep-sub">Deep Sub</option><option value="synth-bass">Synth Bass</option><option value="reese-bass">Reese Bass</option></select></td>
@@ -1006,23 +1059,51 @@
                     <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="deep-sub">Deep Sub</option><option value="warm-analog">Warm Analog</option><option value="distorted-bass">Distorted Bass</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="lead-synth">Lead Synth</option><option value="pluck-synth">Pluck Synth</option><option value="arp-synth">Arp Synth</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="simple-house">Simple House</option><option value="progressive-build">Progressive Build</option><option value="minor-emotional">Minor Emotional</option></select></td>
-                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="filter-sweeps">Filter Sweeps</option><option value="build-ups">Build-ups</option><option value="tension-drops">Tension & Drops</option></select></td>
+                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="filter-sweeps">Filter Sweeps</option><option value="build-ups">Build-ups</option><option value="tension-drops">Tension &amp; Drops</option></select></td>
                     <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="arpeggios">Arpeggios</option><option value="stab-chords">Stab Chords</option><option value="pad-layers">Pad Layers</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="atmospheric-pads">Atmospheric Pads</option><option value="sweep-fx">Sweep FX</option><option value="ambient-layers">Ambient Layers</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="vocal-chops">Vocal Chops</option><option value="dance-vocals">Dance Vocals</option><option value="pitched-vocals">Pitched Vocals</option></select></td>
-                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="risers-sweeps">Risers & Sweeps</option><option value="white-noise">White Noise</option><option value="impact-hits">Impact Hits</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="risers-sweeps">Risers &amp; Sweeps</option><option value="white-noise">White Noise</option><option value="impact-hits">Impact Hits</option></select></td>
                     <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="wide-stereo">Wide Stereo</option><option value="dance-reverb">Dance Reverb</option><option value="club-space">Club Space</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="loud-punchy">Loud & Punchy</option><option value="clean-digital">Clean Digital</option><option value="analog-warmth">Analog Warmth</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="sidechain-compression">Sidechain Compression</option><option value="filter-automation">Filter Automation</option><option value="reverb-delays">Reverb & Delays</option></select></td>
-                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="energetic-uplifting">Energetic & Uplifting</option><option value="emotional-progressive">Emotional Progressive</option><option value="dance-euphoric">Dance Euphoric</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="loud-punchy">Loud &amp; Punchy</option><option value="clean-digital">Clean Digital</option><option value="analog-warmth">Analog Warmth</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="sidechain-compression">Sidechain Compression</option><option value="filter-automation">Filter Automation</option><option value="reverb-delays">Reverb &amp; Delays</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="energetic-uplifting">Energetic &amp; Uplifting</option><option value="emotional-progressive">Emotional Progressive</option><option value="dance-euphoric">Dance Euphoric</option></select></td>
                     <td class="data-cell production hidden"><select><option value="">Select...</option><option value="90s-house">90s House</option><option value="2000s-progressive">2000s Progressive</option><option value="modern-edm">Modern EDM</option></select></td>
+                </tr>
+                 <!-- TRAP ROW -->
+                <tr data-style="trap">
+                    <td class="style-cell">Trap</td>
+                    <td class="data-cell core hidden"><select><option value="">Select...</option><option value="classic-trap">Classic Trap</option><option value="melodic-trap">Melodic Trap</option><option value="hardwave">Hardwave</option></select></td>
+                    <td class="data-cell core hidden"><select><option value="">Select...</option><option value="130-140">130-140 BPM</option><option value="140-150">140-150 BPM</option><option value="150-160">150-160 BPM</option></select></td>
+                    <td class="data-cell core hidden"><select><option value="">Select...</option><option value="C#-minor">C# Minor</option><option value="F-minor">F Minor</option><option value="G#-minor">G# Minor</option></select></td>
+                    <td class="data-cell core hidden"><select><option value="">Select...</option><option value="4/4">4/4</option><option value="half-time">Half-Time</option><option value="double-time">Double-Time</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="heavy-808">Heavy 808 Kit</option><option value="hybrid-trap">Hybrid Trap Kit</option><option value="minimal-trap">Minimal Trap Kit</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="punchy-808">Punchy 808</option><option value="distorted-kick">Distorted Kick</option><option value="sub-kick">Sub Kick</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="sharp-snare">Sharp Snare</option><option value="heavy-clap">Heavy Clap</option><option value="rim-shot">Rim Shot</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="fast-rolls">Fast Rolls</option><option value="triplet-hats">Triplet Hats</option><option value="open-hat-sync">Open Hat Syncopation</option></select></td>
+                    <td class="data-cell rhythm hidden"><select><option value="">Select...</option><option value="vocal-chants">Vocal Chants</option><option value="triangle-pings">Triangle Pings</option><option value="syncopated-perc">Syncopated Perc</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="sliding-808">Sliding 808</option><option value="reese-bass">Reese Bass</option><option value="sub-bass">Sub-Bass</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="gliding-808">Gliding 808 Pattern</option><option value="syncopated-sub">Syncopated Sub</option><option value="minimal-bass">Minimal Bass</option></select></td>
+                    <td class="data-cell bass hidden"><select><option value="">Select...</option><option value="heavy-saturation">Heavy Saturation</option><option value="clean-sub">Clean Sub</option><option value="distorted-mid">Distorted Mid-Range</option></select></td>
+                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="dark-synth-lead">Dark Synth Lead</option><option value="melodic-bell">Melodic Bell</option><option value="sampled-melody">Sampled Melody</option></select></td>
+                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="minor-key-arp">Minor Key Arpeggio</option><option value="dark-pads">Dark Pads</option><option value="simple-ostinato">Simple Ostinato</option></select></td>
+                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="tense-buildup">Tense Buildup</option><option value="dramatic-release">Dramatic Release</option><option value="hypnotic-loop">Hypnotic Loop</option></select></td>
+                    <td class="data-cell melodic hidden"><select><option value="">Select...</option><option value="synth-brass">Synth Brass Stabs</option><option value="vocal-chops">Vocal Chops</option><option value="string-pads">String Pads</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="dark-ambient-pads">Dark Ambient Pads</option><option value="reverb-drones">Reverb Drones</option><option value="filtered-noise">Filtered Noise</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="pitched-ad-libs">Pitched Ad-libs</option><option value="gang-vocals">Gang Vocals</option><option value="processed-vocals">Heavily Processed Vocals</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="risers-and-falls">Risers and Falls</option><option value="impact-sounds">Impact Sounds</option><option value="gun-shots">Gun Shots / Reloads</option></select></td>
+                    <td class="data-cell texture hidden"><select><option value="">Select...</option><option value="wide-stereo-field">Wide Stereo Field</option><option value="cavernous-reverb">Cavernous Reverb</option><option value="delay-throws">Delay Throws</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="loud-and-punchy">Loud and Punchy</option><option value="dark-and-gritty">Dark and Gritty</option><option value="polished-mainstream">Polished Mainstream</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="heavy-sidechain">Heavy Sidechain</option><option value="multiband-distortion">Multiband Distortion</option><option value="stereo-imaging">Stereo Imaging FX</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="aggressive-and-dark">Aggressive &amp; Dark</option><option value="energetic-and-hype">Energetic and Hype</option><option value="melancholic-and-wavy">Melancholic and Wavy</option></select></td>
+                    <td class="data-cell production hidden"><select><option value="">Select...</option><option value="2010s-trap">2010s Trap</option><option value="modern-soundcloud">Modern Soundcloud</option><option value="future-trap">Future Trap</option></select></td>
                 </tr>
             </tbody>
         </table>
         
         <div id="promptOutput" style="display:none; margin-top: 30px;">
             <div class="clean-prompt" id="cleanPromptSection">
-                <h3>🎵 Clean Prompt (Ready to Copy)</h3>
+                <h3>Clean Prompt (Ready to Copy)</h3>
                 <button class="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
                 <div class="clean-prompt-text" id="cleanPromptText"></div>
             </div>
@@ -1030,7 +1111,7 @@
             <div class="divider"></div>
             
             <div class="detailed-breakdown">
-                <h3>📊 Detailed Breakdown by Style</h3>
+                <h3>Detailed Breakdown by Style</h3>
                 <div id="detailedBreakdown"></div>
             </div>
         </div>
@@ -1047,7 +1128,96 @@
             production: false
         };
         
-        // Track current active tab
+        let selectedStyles = new Set(['all']);
+
+        function toggleAdvancedControls() {
+            const content = document.querySelector('.advanced-controls-content');
+            const icon = document.querySelector('.advanced-controls-header .toggle-icon');
+            content.classList.toggle('collapsed');
+            if (content.classList.contains('collapsed')) {
+                icon.textContent = '+';
+            } else {
+                icon.textContent = '-';
+            }
+        }
+
+        function toggleStyle(styleName, btn) {
+            const allStylesBtn = document.querySelector('.tab-button[data-tab="all"]');
+            if (styleName === 'all') {
+                if (selectedStyles.has('all') && selectedStyles.size === 1) {
+                    selectedStyles.clear();
+                    document.querySelectorAll('.tab-button:not([data-tab="all"])').forEach(b => selectedStyles.add(b.dataset.tab));
+                } else {
+                    selectedStyles.clear();
+                    selectedStyles.add('all');
+                }
+            } else {
+                selectedStyles.delete('all');
+                if (selectedStyles.has(styleName)) {
+                    selectedStyles.delete(styleName);
+                } else {
+                    selectedStyles.add(styleName);
+                }
+            }
+
+            updateTabButtons();
+            updateRowVisibility();
+            saveSelectedStyles();
+        }
+
+        function updateTabButtons() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
+                const style = btn.dataset.tab;
+                if (selectedStyles.has(style)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (selectedStyles.size === 0) {
+                const allStylesBtn = document.querySelector('.tab-button[data-tab="all"]');
+                allStylesBtn.classList.add('active');
+                selectedStyles.add('all');
+            }
+        }
+
+        function updateRowVisibility() {
+            const rows = document.querySelectorAll('tbody tr[data-style]');
+            rows.forEach(row => {
+                const style = row.dataset.style;
+                if (selectedStyles.has('all') || selectedStyles.has(style)) {
+                    row.classList.remove('tab-hidden');
+                    row.classList.add('tab-visible');
+                } else {
+                    row.classList.remove('tab-visible');
+                    row.classList.add('tab-hidden');
+                }
+            });
+        }
+
+        function saveSelectedStyles() {
+            localStorage.setItem('musicPromptSelectedStyles', JSON.stringify(Array.from(selectedStyles)));
+        }
+
+        function loadSelectedStyles() {
+            const saved = localStorage.getItem('musicPromptSelectedStyles');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.length > 0) {
+                    selectedStyles = new Set(parsed);
+                } else {
+                    selectedStyles = new Set(['all']);
+                }
+            } else {
+                selectedStyles = new Set(['all']);
+            }
+            updateTabButtons();
+            updateRowVisibility();
+        }
+
+        // Track current active tab (legacy, now handled by selectedStyles)
         let currentTab = 'all';
         
         // Phase 2: Enhanced toggle with animations and preferences
@@ -1068,8 +1238,8 @@
             if (isExpanded) {
                 header.classList.remove('collapsed');
                 header.classList.add('expanded');
-                icon.textContent = '➖';
-                icon.classList.remove('rotated');
+                if(icon) icon.textContent = '-';
+                if(icon) icon.classList.remove('rotated');
                 
                 columnHeaders.forEach(col => col.classList.remove('hidden'));
                 dataCells.forEach(cell => cell.classList.remove('hidden'));
@@ -1080,8 +1250,8 @@
             } else {
                 header.classList.add('collapsed');
                 header.classList.remove('expanded');
-                icon.textContent = '➕';
-                icon.classList.add('rotated');
+                if(icon) icon.textContent = '+';
+                if(icon) icon.classList.add('rotated');
                 
                 columnHeaders.forEach(col => col.classList.add('hidden'));
                 dataCells.forEach(cell => cell.classList.add('hidden'));
@@ -1201,7 +1371,7 @@
             
             // Update button text
             const btn = document.querySelector('.btn-secondary[onclick="toggleAllSections()"]');
-            btn.innerHTML = allExpanded ? '⤵️ Expand All' : '⤴️ Collapse All';
+            btn.innerHTML = allExpanded ? 'Expand All' : 'Collapse All';
             
             updateSelectionBadges();
             savePreferences();
@@ -1399,7 +1569,7 @@ function generateStylePreset() {
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = 'music_prompt_matrix.csv';
+            a.download = `music_prompt_matrix_${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -1407,20 +1577,12 @@ function generateStylePreset() {
         }
         
         function generatePrompt() {
-            // Only generate from visible rows based on active tab
-            const rows = currentTab === 'all' 
-                ? document.querySelectorAll('tbody tr')
-                : document.querySelectorAll('tbody tr.tab-visible');
+            const rows = document.querySelectorAll('tbody tr.tab-visible');
             
             let detailedPrompts = [];
             let allValues = [];
             
             rows.forEach(row => {
-                // Skip hidden rows
-                if (row.classList.contains('tab-hidden')) {
-                    return;
-                }
-                
                 const styleName = row.querySelector('.style-cell').textContent;
                 const selects = row.querySelectorAll('select');
                 const values = [];
@@ -1507,7 +1669,7 @@ function generateStylePreset() {
         function showCopiedFeedback() {
             const btn = document.querySelector('.copy-btn');
             const originalText = btn.textContent;
-            btn.textContent = '✅ Copied!';
+            btn.textContent = 'Copied!';
             btn.classList.add('copied');
             
             setTimeout(() => {
@@ -1685,10 +1847,10 @@ function generateStylePreset() {
                         tabButtons[newIndex].click();
                         
                         // Scroll the new tab into view
-                        tabButtons[newIndex].scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'nearest', 
-                            inline: 'center' 
+                        tabButtons[newIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'center'
                         });
                     }
                 }
@@ -1699,6 +1861,8 @@ function generateStylePreset() {
         document.addEventListener('DOMContentLoaded', function() {
             // Load saved preferences first
             loadPreferences();
+            loadSelectedStyles();
+            initializeFusionToggles();
             
             // Initialize section visibility based on loaded preferences
             Object.keys(sectionStates).forEach(section => {
@@ -1716,15 +1880,6 @@ function generateStylePreset() {
                     saveMatrixData();
                 });
             });
-            
-            // Restore last active tab from localStorage
-            const savedTab = localStorage.getItem('activeTab');
-            if (savedTab && document.querySelector(`.tab-button[data-tab="${savedTab}"]`)) {
-                switchToTab(savedTab);
-            } else {
-                // Default to "all" tab
-                switchToTab('all');
-            }
             
             // Setup keyboard navigation
             setupKeyboardNavigation();
@@ -1900,7 +2055,7 @@ function generateStylePreset() {
                 lastUsed: null,
                 styleSelections: matrixState,
                 sectionStates: { ...sectionStates },
-                activeTab: currentTab
+                activeTab: Array.from(selectedStyles) // Save multi-select state
             };
             
             const presets = getPresets();
@@ -1967,8 +2122,10 @@ function generateStylePreset() {
             }
             
             // Restore tab if available
-            if (preset.activeTab && document.querySelector(`.tab-button[data-tab="${preset.activeTab}"]`)) {
-                switchToTab(preset.activeTab);
+            if (preset.activeTab) {
+                selectedStyles = new Set(preset.activeTab);
+                updateTabButtons();
+                updateRowVisibility();
             }
             
             // Update last used timestamp
@@ -2192,7 +2349,7 @@ function generateStylePreset() {
             toast.style.cssText = `
                 padding: 12px 20px;
                 margin-bottom: 10px;
-                border-radius: 8px;
+                border-radius: 2px;
                 color: white;
                 font-size: 14px;
                 font-weight: 500;
@@ -2267,6 +2424,79 @@ function generateStylePreset() {
             } catch (e) {
                 console.warn('Could not save history:', e);
             }
+        }
+
+        function initializeFusionToggles() {
+            const container = document.getElementById('fusionStyleToggles');
+            const styles = Array.from(document.querySelectorAll('.tab-button:not([data-tab="all"]) ')).map(btn => ({
+                id: btn.dataset.tab,
+                name: btn.textContent
+            }));
+
+            container.innerHTML = '';
+            styles.forEach(style => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = style.id;
+                checkbox.addEventListener('change', validateFusionSelection);
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(style.name));
+                container.appendChild(label);
+            });
+        }
+
+        function validateFusionSelection() {
+            const checkboxes = document.querySelectorAll('#fusionStyleToggles input:checked');
+            const btn = document.getElementById('generateFusionBtn');
+            btn.disabled = checkboxes.length < 2 || checkboxes.length > 3;
+        }
+
+        function generateFusion() {
+            const selected = Array.from(document.querySelectorAll('#fusionStyleToggles input:checked')).map(cb => cb.value);
+            if (selected.length < 2 || selected.length > 3) {
+                showToast('Please select 2 or 3 styles to fuse.', 'warning');
+                return;
+            }
+
+            clearAllSilently();
+
+            const [styleA, styleB, styleC] = selected;
+
+            const distribution = {
+                core: styleA,
+                rhythm: styleB,
+                bass: styleC || styleA, // Fallback to A if C is not present
+                melodic: styleA,
+                texture: styleB,
+                production: styleC || styleB // Fallback to B if C is not present
+            };
+
+            Object.entries(distribution).forEach(([section, styleId]) => {
+                const row = document.querySelector(`tr[data-style="${styleId}"]`);
+                if (!row) return;
+
+                const sourceSelects = row.querySelectorAll(`.data-cell.${section} select`);
+                sourceSelects.forEach((sourceSelect, index) => {
+                    const options = Array.from(sourceSelect.options).filter(opt => opt.value !== '');
+                    if (options.length > 0) {
+                        const randomOption = options[Math.floor(Math.random() * options.length)];
+                        const targetRow = document.querySelector(`tr[data-style="${styleId}"]`);
+                        const targetSelect = targetRow.querySelectorAll(`.data-cell.${section} select`)[index];
+                        if(targetSelect) targetSelect.value = randomOption.value;
+                    }
+                });
+            });
+
+            // Activate the fused styles in the tab view
+            selectedStyles.clear();
+            selected.forEach(s => selectedStyles.add(s));
+            updateTabButtons();
+            updateRowVisibility();
+            saveSelectedStyles();
+
+            generatePrompt();
+            showToast('Fusion prompt generated!', 'success');
         }
         
         // Listen for preset dropdown changes

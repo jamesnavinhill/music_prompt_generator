@@ -1241,7 +1241,34 @@
             });
         }
         
-        function generateStylePreset() {
+        function clearAllSilently() {
+    // Clear all selections
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => {
+        if (select.id !== 'styleSelect') {
+            select.value = '';
+        }
+    });
+    
+    // Clear output
+    document.getElementById('promptOutput').style.display = 'none';
+    document.getElementById('cleanPromptText').textContent = '';
+    document.getElementById('detailedBreakdown').textContent = '';
+    
+    // Update badges
+    updateSelectionBadges();
+    
+    // Clear saved matrix data
+    localStorage.removeItem('musicMatrixData');
+    
+    // Clear focus mode if active
+    document.querySelector('.container').classList.remove('focus-mode-active');
+    document.querySelectorAll('.section-header').forEach(header => {
+        header.classList.remove('focused');
+    });
+}
+
+function generateStylePreset() {
             const styleSelect = document.getElementById('styleSelect');
             const selectedStyle = styleSelect.value;
             
@@ -1250,8 +1277,8 @@
                 return;
             }
             
-            // Clear all first
-            clearAll();
+            // Clear all first - use the silent version instead
+            clearAllSilently();
             // Keep the style selected
             styleSelect.value = selectedStyle;
             
