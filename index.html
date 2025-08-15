@@ -1643,8 +1643,11 @@ function generateStylePreset() {
                 
                 selects.forEach(select => {
                     if (select.value) {
-                        values.push(select.value);
-                        allValues.push(select.value);
+                        // Check if the value is a BPM range
+                        const isBPM = /^\d+-\d+$/.test(select.value);
+                        const formattedValue = isBPM ? `${select.value} BPM` : select.value;
+                        values.push(formattedValue);
+                        allValues.push(formattedValue);
                     }
                 });
                 
